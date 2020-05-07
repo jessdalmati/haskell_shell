@@ -4,6 +4,8 @@ where
 import Control.Monad (unless)
 import System.IO
 import System.Directory
+import Data.ByteString as S (ByteString, unpack, readFile)
+import Data.Char (chr)
 
 --https://blogg.bekk.no/creating-a-repl-in-haskell-efcdef1deec2
 main :: IO ()
@@ -102,8 +104,12 @@ safeReadFile fp = do
 
 readFile_ :: FilePath -> IO ()
 readFile_ fp = do
-               fileData <- readFile fp
-               putStrLn fileData
+               fileData <- S.readFile fp
+               putStrLn (bsToStr fileData)
+
+--https://stackoverflow.com/questions/4702325/best-way-to-convert-between-char-and-word8
+bsToStr :: S.ByteString -> String
+bsToStr = map (chr . fromEnum) . S.unpack
 
 fileDoesNotExist :: FilePath -> IO ()
 fileDoesNotExist fp = do
