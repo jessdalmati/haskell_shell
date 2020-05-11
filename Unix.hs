@@ -49,6 +49,7 @@ execute cmd | c == "ls" = ls
             | c == "pwd" = pwd
             | c == "cd" = cd args
             | c == "cat" = cat args
+            | c == "" = putStrLn ""
             | otherwise = notFound c
             where 
               c = getCmd cmd 
@@ -78,9 +79,9 @@ pwd = do
       putStrLn wd 
 
 cd :: [String] -> IO ()
-cd args | length args == 1 = safeSetDir h
+cd args | args == [] = putStrLn ""
+        | length args == 1 = safeSetDir (head args)
         | otherwise = tooManyArgs
-        where h = head args
 
 safeSetDir :: FilePath -> IO ()
 safeSetDir fp = do 
@@ -92,9 +93,9 @@ tooManyArgs :: IO ()
 tooManyArgs = putStrLn "error: too many arguments"
 
 cat :: [String] -> IO ()
-cat args | length args == 1 = safeReadFile h
+cat args | args == [] = putStrLn ""
+         | length args == 1 = safeReadFile (head args)
          | otherwise = tooManyArgs
-         where h = head args
 
 safeReadFile :: FilePath -> IO ()
 safeReadFile fp = do
