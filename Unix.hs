@@ -6,6 +6,7 @@ import System.IO
 import System.Directory
 import Data.ByteString as S (ByteString, unpack, readFile)
 import Data.Char (chr)
+import Diff (getDiff)
 
 --https://blogg.bekk.no/creating-a-repl-in-haskell-efcdef1deec2
 main :: IO ()
@@ -27,11 +28,9 @@ getArgs :: String -> [String]
 getArgs cmd = removeSpaces (tail (split ' ' cmd))
 
 removeSpaces :: [String] -> [String]
-removeSpaces [] 
-  = []
-removeSpaces (h : t)
-  | h == " " = removeSpaces t
-  | otherwise = h : removeSpaces t 
+removeSpaces [] = []
+removeSpaces (h:t) | h == " " = removeSpaces t
+                   | otherwise = h : removeSpaces t 
 
 getCmd :: String -> String
 getCmd cmd = head (split ' ' cmd)
@@ -49,6 +48,7 @@ execute cmd | c == "ls" = ls
             | c == "pwd" = pwd
             | c == "cd" = cd args
             | c == "cat" = cat args
+            | c == "diff" = diff args
             | c == "" = putStrLn ""
             | otherwise = notFound c
             where 
@@ -118,4 +118,16 @@ fileDoesNotExist fp = do
                       if isDir then putStrLn ("error: " ++ fp ++ " is a directory")
                       else putStrLn "error: file does not exist"
 
+diff :: [String] -> IO ()
+diff [] = putStr ""
+diff (x:y:[]) = safeDiff x y
+diff (x:xs) = putStrLn "error: invalid arguments"
+
+safeDiff :: FilePath -> FilePath -> IO ()
+safeDiff p1 p2 = do
+                 exists1 <- doesFileExist p1
+                 exists2 <- doesFileExist p2
+                 if exists1 && exists2
+                  then getDiff p1 p2
+                    else putStrLn "error: file(s) not found"
 
