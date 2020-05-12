@@ -78,3 +78,22 @@ safeGrep str path = do
                     putStrLn (printList grepped)
                     else putStrLn "error: file does not exist"
 
+uniq :: [String] -> IO ()
+uniq [] = putStr ""
+uniq ("":xs) = putStrLn "error: invalid args"
+uniq (x:[]) = safeUniq x
+uniq (x:xs) = putStrLn "error: invalid args"
+
+safeUniq :: FilePath -> IO ()
+safeUniq path = do
+                exists <- doesFileExist path
+                if exists
+                then do 
+                contents <- getStrContents path
+                let splitContents = filter_ "\n" (split '\n' contents)
+                let uniqContents = getUniq testUniq (head splitContents) splitContents
+                putStrLn (printList uniqContents)
+                else putStrLn "error: file not found"
+
+echo :: [String] -> IO ()
+echo args = putStrLn (printEcho args)

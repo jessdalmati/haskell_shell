@@ -26,5 +26,7 @@ bsToStr = map (chr . fromEnum) . S.unpack
 fileDoesNotExist :: FilePath -> IO ()
 fileDoesNotExist fp = do
                       isDir <- doesDirectoryExist fp
-                      if isDir then putStrLn ("error: " ++ fp ++ " is a directory")
-                      else putStrLn "error: file does not exist"                   
+                      if isDir 
+                      then putStrLn ("error: " ++ fp ++ " is a directory")
+                      else putStrLn "error: file does not exist"      
+         

@@ -27,7 +27,17 @@ prettyDirContents contents | length contents == 0 = ""
 
 printList :: [String] -> String
 printList [] = ""
+printList (x:[]) = x
 printList (x:xs) = x ++ "\n" ++ printList xs
+
+printEcho :: [String] -> String
+printEcho [] = []
+printEcho (x:[]) = x
+printEcho (x:xs) = x ++ " " ++ printEcho xs
+
+concat_ :: [String] -> String
+concat_ [] = []
+concat_ (x:xs) = x ++ concat_ xs
 
 prettyPrintDiff :: [(Int, String)] -> String
 prettyPrintDiff [] = []
@@ -46,10 +56,18 @@ lineNums i [] = []
 lineNums i ("\n":t) = (i, "\n") : lineNums i t 
 lineNums i (h:t) = (i, h) : lineNums (i+1) t
 
+testUniq :: String -> String -> Bool
+testUniq a b = a == b
+
+getUniq :: (String -> String -> Bool) -> String -> [String] -> [String]
+getUniq op _ [] = []
+getUniq op acc (x:xs) | op acc x = getUniq op x xs
+                      | otherwise = acc : getUniq op x xs
+
 --https://stackoverflow.com/questions/46580924/haskell-splitting-a-string-by-delimiter
 split :: Char -> String -> [String]
 split ch [] = [""]
 split ch (h : t) | h == ch  = "" : [ch] : rest
                  | otherwise = (h : head rest) : tail rest
                  where 
-                  rest = split ch t
+                   rest = split ch t
