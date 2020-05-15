@@ -71,3 +71,20 @@ split ch (h : t) | h == ch  = "" : [ch] : rest
                  | otherwise = (h : head rest) : tail rest
                  where 
                    rest = split ch t
+
+removeLast :: [String] -> String
+removeLast [] = ""
+removeLast (x:[]) = ""
+removeLast (x:xs) = x ++ removeLast xs
+
+path :: String -> String
+path xs | p == "" = xs
+        | otherwise = p
+        where 
+          p = removeLast (split '/' xs) 
+
+isPath :: String -> Bool
+isPath xs | length p == 1 = True
+          | otherwise = False
+          where 
+            p = split '/' xs

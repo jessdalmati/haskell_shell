@@ -97,3 +97,20 @@ safeUniq path = do
 
 echo :: [String] -> IO ()
 echo args = putStrLn (printEcho args)
+
+mkdir :: [String] -> IO ()
+mkdir [] = putStr ""
+mkdir ("":xs) = putStrLn "error: invalid args"
+mkdir (x:[]) = safeMkdir x
+mkdir (x:xs) = putStrLn "error: invalid args"
+
+safeMkdir :: String -> IO ()
+safeMkdir dir = do 
+                dirExists <- doesDirectoryExist dir 
+                pathExists <- doesPathExist (path dir)
+                if dirExists then putStrLn "error: directory already exists"
+                else if pathExists || isPath dir then createDirectory dir 
+                else putStrLn "error: path does not exist"
+
+
+

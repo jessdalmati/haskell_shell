@@ -38,6 +38,7 @@ execute cmd | c == "ls" = ls
             | c == "grep" = grep args
             | c == "uniq" = uniq args
             | c == "echo" = echo args
+            | c == "mkdir" = mkdir args
             | c == "" = putStrLn ""
             | otherwise = notFound c
             where 
