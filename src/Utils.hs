@@ -8,9 +8,8 @@ grepLine str line = line =~ str :: Bool
 
 grepContents :: String -> [String] -> [String]
 grepContents str [] = []
-grepContents str (x:xs) = if grepLine str x
-                          then x : grepContents str xs
-                          else grepContents str xs
+grepContents str (x:xs) | grepLine str x = x : grepContents str xs
+                        | otherwise = grepContents str xs
 
 filter_ :: Eq a => a -> [a] -> [a]
 filter_ x [] = []
